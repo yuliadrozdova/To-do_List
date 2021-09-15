@@ -29,6 +29,7 @@ render = () => {
     while (content.firstChild){
         content.removeChild(content.firstChild);
     }
+    console.log(allTasks);
     allTasks.map((item, index) => {
        localStorage.setItem('tasks', JSON.stringify(allTasks));
 
@@ -68,25 +69,17 @@ render = () => {
            text.className = 'text-edit';
            text.value = item.text;
 
-           let p = this;
-           imageDone.onclick = function func() {
-
-               text.className = 'text-task';
-                    p.innerHTML = text.value;
-                    p.addEventListener('click', func);
-
-               imageEdit.hidden = false;
-               imageDone.hidden = true;
-
-               allTasks[index].text = text.value;
-
-               localStorage.setItem('tasks', JSON.stringify(allTasks));
-             //  doneTask(index);
-           }
-
+           //editTask(index);
        }
 
+        imageDone.onclick = function func() {
+            item.text = text.value;
 
+            doneTask(item, index);
+            text.className = 'text-task';
+            imageEdit.hidden = false;
+            imageDone.hidden = true;
+        }
 
         const imageDelete = document.createElement('img');
         imageDelete.src = 'img/close.svg';
@@ -95,16 +88,14 @@ render = () => {
             deleteTask(index);
         }
 
-
-
-
-
        content.appendChild(container);
     });
 }
+
 onChangeCheckbox = (index) => {
     allTasks[index].isCheck = !allTasks[index].isCheck;
     localStorage.setItem('tasks', JSON.stringify(allTasks));
+
 render();
 }
 
@@ -113,18 +104,19 @@ deleteTask = (index) => {
     localStorage.setItem('tasks', JSON.stringify(allTasks));
     render();
 }
+// editTask = (index) => {
+//
+// }
 
-editTask = (index) => {
+doneTask = (item, index) => {
+    allTasks[index].text = allTasks[index].text;
 
-allTasks[index]
-
-
-    }
-
-doneTask = (index) => {
-
+    localStorage.setItem('tasks', JSON.stringify(allTasks));
+    console.log(allTasks);
 }
 
+
+console.log(allTasks);
 
 //************************************************************
 // let ps = document.getElementsByClassName('p');
