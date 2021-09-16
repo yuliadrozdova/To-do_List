@@ -42,6 +42,8 @@ render = () => {
        checkbox.checked = item.isCheck;
        checkbox.onchange = function () {
            onChangeCheckbox(index);
+
+
        };
        container.appendChild(checkbox);
 
