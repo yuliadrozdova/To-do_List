@@ -1,21 +1,6 @@
-// const express = require('express');
-// const app = express();
-//
-// app.get("/", (req, res) => {
-//     res.send('Helloooo!');
-// });
-//
-// app.get("/paramRequest", (req, res) => {
-//       res.send(req.query);
-// });
-//
-// app.listen(8080, () => {
-//     console.log('Example.......')
-// })
-
-//****************************
-
 const express = require('express');
+//const bodyParser = require('body-parser');
+//const cors = require('cors');
 const mongoose = require('mongoose');
 const app = express();
 const Schema = mongoose.Schema; //схема
@@ -25,75 +10,70 @@ const taskScheme = new Schema({
     isCheck: Boolean
 });
 
-const uri = "mongodb+srv://user_01:CK9qTqZ@cluster0.ijpew.mongodb.net/TestAppDB?retryWrites=true&w=majority"
-mongoose.connect(uri, {useNewUriParser: true, useUnitedTopology: true});
-
 const Task = mongoose.model("tasks", taskScheme);
-app.get("/", (req, res) => {
-   const task = new Task({
-       text: 'First task',
-       isCheck: false
-   });
-   task.save().then(result => {
-       res.send(result);
-   });
 
-   // res.send('Helloooo!');
+//app.use(cors());
+
+const uri = "mongodb+srv://user_01:CK9qTqZ5@cluster0.ijpew.mongodb.net/TestAppDB?retryWrites=true&w=majority"
+mongoose.connect(uri);
+
+//app.use(bodyParser.json());
+
+app.get('/allTasks', (req,res) => {
+    Task.find().then(result => {
+        res.send({data: result});
+    });
 });
 
-app.get("/paramRequest", (req, res) => {
-      res.send(req.body);
+app.post('/createTask', (req,res) => {
+    const task = new Task(req.body);
+    task.save().then(result => {
+        res.send('Task created');
+    })
+});
+
+app.delete('/deleteTask', (req,res) => {
+    Task.deleteOne({text: "First task"}).then(result => {
+        res.send('Task deleted');
+    })
+});
+
+app.put('/updateTask', (req,res) => {
+    Task.updateOne({text: 'First task'}, {text: 'First task-2'}).then(result => {
+        res.send('Task updating');
+    })
 });
 
 app.listen(8080, () => {
     console.log('Example app listening on port 8080!')
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//mongodb+srv://user_01:<password>@cluster0.ijpew.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
-
-//or
-
-// const { MongoClient } = require('mongodb');
-// const uri = "mongodb+srv://user_01:<password>@cluster0.ijpew.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-// client.connect(err => {
-//     const collection = client.db("test").collection("devices");
-//     // perform actions on the collection object
-//     client.close();
+//*************************************************************
+// app.get("/", (req, res) => {
+//    const task = new Task({
+//        text: 'Second task',
+//        isCheck: false
+//    });
+//    task.save().then(result => {
+//        res.send(result);
+//    }).catch(err => console.log(err))
+//
 // });
-
-
-
 //
-// Результаты перевода
-// Выберите ваш драйвер и версию
+// app.get("/paramRequest", (req, res) => {
+//     Task.find().then(result => {
+//         res.send({data: result});
+//     })
+// });
 //
-// ВЕРСИЯ ВОДИТЕЛЯ
-// Node.js
-// 4.0 или новее
-// Добавьте строку подключения в код приложения
-// Включить полный пример кода драйвера
-// mongodb + srv: // user_01: <password> @ cluster0.ijpew.mongodb.net / myFirstDatabase? retryWrites = true & w = большинство
+// app.post("/", (req, res) => {
+//     res.send('post /')
+// });
 //
-// Замените <password> паролем пользователя user_01. Замените myFirstDatabase именем базы данных, которую соединения будут использовать по умолчанию. Убедитесь, что все параметры параметров закодированы в URL-адресе.
+// app.put("/", (req, res) => {
+//     res.send('put /')
+// });
+//
+// app.delete("/", (req, res) => {
+//     res.send('delete /')
+// });
